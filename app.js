@@ -1,9 +1,14 @@
 const express = require('express');
+const app = express();
+const cors = require('cors')
+// const bodyParser = require('body-parser');
+
+app.use(express.json());
+// app.use(bodyParser.OptionsJson());
+// app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 const placesRoutes = require('./routes/places-routes');
-
-const app = express();
-
 app.use('/api/places', placesRoutes);
 
 //MW will run only if the previous function returns an error. Express recognizes when there are 4 parameters instead of the usual 3 as error handling middleware

@@ -6,9 +6,11 @@ app.use(express.json());
 app.use(cors());
 
 const placesRoutes = require('./routes/places-routes');
+const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 
 app.use('/api/places', placesRoutes);
+app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError('could not find this route', 404);

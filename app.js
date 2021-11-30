@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
+const mongoose = require('mongoose');
 
 app.use(express.json());
 app.use(cors());
@@ -25,5 +26,12 @@ app.use((error, req, res, next) => {
   res.json({message: error.message || 'an unknown error occurred'});
 });
 
+mongoose 
+  .connect('mongodb+srv://trae:trae@cluster0.cmthy.mongodb.net/places?retryWrites=true&w=majority')
+  .then( () => {
+    app.listen(5000);
+  })
+  .catch(err => {
+    console.log(err);
+  })
 
-app.listen(5000);

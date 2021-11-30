@@ -1,15 +1,10 @@
-// import {v4 as uuidv4} from 'uuid';
-
-// const {v4: uuidv4} = require('uuid');
-
 const uuid = require('uuid').v4;
 
 const { validationResult } = require('express-validator')
 const getCoordsForAddress = require('../util/location');
+const Place = require('../models/place');
 
 const HttpError = require('../models/http-error');
-
-// const newId = uuidv4()
 
 let DUMMY_PLACES = [
   {
@@ -46,9 +41,7 @@ const getPlacesByUserId = (req, res, next) => {
     return next(new HttpError('could not find places for provided user id', 404));
   }
   res.json({places})
-}
-
-
+};
 
 const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
@@ -64,23 +57,29 @@ const createPlace = async (req, res, next) => {
 
   try {
     coordinates = await getCoordsForAddress(address)
+    console.log('controller coordinates', coordinates)
   } catch(error) {
     return next(error);
   }
 
-  const createdPlace = {
-    id: uuid(),
-    title, 
+  const createdPlace = new Place({
+    title,
     description,
-    location: coordinates,
     address,
+    location: coordinates,
+    image: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2021/07/Shannon-Beador-RHOC.jpg',
     creator
-  };
+  });
   
-  DUMMY_PLACES.push(createdPlace);
+  try {
+    await createdPlace.save();
+  } catch(err) {
+    const error = new HttpError('creating place failed try again', 500);
+    return next(error);
+  }
 
   res.status(201).json({place: createdPlace})
-}
+};
 
 const updatePlace = (req, res, next) => {
   const errors = validationResult(req);
@@ -101,7 +100,7 @@ const updatePlace = (req, res, next) => {
   DUMMY_PLACES[placeIndex] = updatedPlace;
 
   res.status(200).json({place: updatedPlace});
-}
+};
 
 const deletePlace = (req, res, next) => {
   const placeId = req.params.pid;
@@ -111,7 +110,7 @@ const deletePlace = (req, res, next) => {
 
   DUMMY_PLACES = DUMMY_PLACES.filter(p => p.id != placeId);
   res.status(200).json({message: 'deleted place'})
-}
+};
 
 exports.getPlaceById = getPlaceById;
 exports.getPlacesByUserId = getPlacesByUserId;

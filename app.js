@@ -1,7 +1,7 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
+const app = express();
 
 app.use(express.json());
 app.use(cors());
@@ -26,12 +26,22 @@ app.use((error, req, res, next) => {
   res.json({message: error.message || 'an unknown error occurred'});
 });
 
+// const options = { useNewUrlParser: true, useUnifiedTopology: true};
+const connectUrl = 'mongodb+srv://trailer:rolyat@cluster0.cmthy.mongodb.net/places?retryWrites=true&w=majority';
+
+const connectConfig = {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true
+}
+
 mongoose 
-  .connect('mongodb+srv://trae:trae@cluster0.cmthy.mongodb.net/places?retryWrites=true&w=majority')
+  .connect(connectUrl, connectConfig)
   .then( () => {
+    console.log('connected to db?')
     app.listen(5000);
   })
   .catch(err => {
     console.log(err);
-  })
+  });
+
 

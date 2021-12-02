@@ -34,7 +34,7 @@ const signup = async (req, res, next) => {
     ) 
   }
   
-  const { user, email, password, places } = req.body;
+  const { user, email, password } = req.body;
 
   let existingUser;
   try{
@@ -54,7 +54,7 @@ const signup = async (req, res, next) => {
     email,
     image: 'https://cdn-www.realitytea.com/assets/uploads/2016/06/NUP_174107_0154-500x350.jpg',
     password,
-    places
+    places: []
   })
 
   try {

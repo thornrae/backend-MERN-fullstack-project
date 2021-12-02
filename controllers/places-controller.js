@@ -100,7 +100,9 @@ const updatePlace = async (req, res, next) => {
 
   if(!errors.isEmpty()) {
     console.log(errors);
-    throw new HttpError('invalid input try again');
+    return next(
+       new HttpError('invalid input try again')
+    )
   }
 
   const { title, description} = req.body;

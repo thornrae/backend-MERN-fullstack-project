@@ -159,7 +159,7 @@ const deletePlace = async (req, res, next) => {
 
   let place 
   try {
-    place = Place.findById(placeId).populate('creator');
+    place = await Place.findById(placeId).populate('creator');
   } catch(err) {
     const error = new HttpError('couldnt delete', 500);
     return next(error);

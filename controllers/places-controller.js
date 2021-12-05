@@ -10,20 +10,6 @@ const User = require('../models/user');
 const HttpError = require('../models/http-error');
 
 
-let DUMMY_PLACES = [
-  {
-    id:'p1',
-    title: 'empire state building', 
-    description: 'tall ass building',
-    location: {
-      lat: 40.7484405,
-      lon: -73.9878531
-    }, 
-    address: '20 W 34th St, New York, NY 10001',
-    creator: 'u1'
-  }
-]
-
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
 
@@ -40,7 +26,7 @@ const getPlaceById = async (req, res, next) => {
     const error =  new HttpError('could not find place for provided place id', 404);
     return next(error);
   } 
-  res.json({place: place.toObject( { getters: true }) }); //({place})
+  res.json({place: place.toObject( { getters: true }) });
 };
 
 const getPlacesByUserId = async (req, res, next) => {
@@ -56,6 +42,7 @@ const getPlacesByUserId = async (req, res, next) => {
     return next(error)
   }
 
+  //if(!places || places.length === 0) {
   if(!userWithPlaces || userWithPlaces.places.length === 0){
     return next(new HttpError('could not find places for provided user id', 404));
   }

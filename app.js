@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -20,7 +24,15 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+
+//general error handling logic
 app.use((req, res, next) => {
+  if(req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
   const error = new HttpError('could not find this route', 404);
   throw error;
 });

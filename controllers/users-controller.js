@@ -19,10 +19,12 @@ const signup = async (req, res, next) => {
   const errors = validationResult(req);
   
   if(!errors.isEmpty()) {
+
     return next(
       new HttpError('invalid inputs check ur data', 422)
     ) 
   }
+
   
   const { user, email, password } = req.body;
 
@@ -42,7 +44,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User( {
     user,
     email,
-    image: 'https://cdn-www.realitytea.com/assets/uploads/2016/06/NUP_174107_0154-500x350.jpg',
+    image: req.file.path,
     password,
     places: []
   })

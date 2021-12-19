@@ -1,4 +1,4 @@
-const uuid = require('uuid').v4;
+
 
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose')
@@ -31,6 +31,7 @@ const getPlaceById = async (req, res, next) => {
 
 const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
+  console.log('userId in placesconteoller', userId);
 
   // let places 
   let userWithPlaces

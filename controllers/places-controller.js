@@ -74,7 +74,7 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2021/07/Shannon-Beador-RHOC.jpg',
+    image: req.file.path,
     creator
   });
 

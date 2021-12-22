@@ -96,10 +96,10 @@ const createPlace = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-     createdPlace.save({ session: sess });
+    await createdPlace.save({ session: sess });
     user.places.push(createdPlace);
     console.log('userplaces in controller', user.places)
-     user.save({session: sess});
+    await user.save({session: sess});
     await sess.commitTransaction();
 
   } catch(err) {
@@ -131,6 +131,14 @@ const updatePlace = async (req, res, next) => {
     const error = new HttpError('could not update', 500);
     return next(error);
   }
+
+  if(place.creator.toString() !== req.userData.userId) {
+    const error = new HttpError(
+      'ya cant edit this', 
+      401
+    );
+    return next(error);
+  }
  
   place.title = title;
   place.description = description;
@@ -158,6 +166,15 @@ const deletePlace = async (req, res, next) => {
   
   if(!place) {
     const error = new HttpError('couldnt find place for this id', 404)
+    return next(error);
+  }
+
+  //creator is full user object here
+  if(place.creator.id !== req.userData.userId) {
+    const error = new HttpError(
+      'ya cant delete this', 
+      403
+    );
     return next(error);
   }
 

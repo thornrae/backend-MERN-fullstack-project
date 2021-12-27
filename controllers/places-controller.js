@@ -44,7 +44,7 @@ const getPlacesByUserId = async (req, res, next) => {
   }
 
   //if(!places || places.length === 0) {
-  if(!userWithPlaces || userWithPlaces.places.length === 0){
+  if(!userWithPlaces){
     return next(new HttpError('could not find places for provided user id', 404));
   }
   res.json({ places: userWithPlaces.places.map(place => place.toObject({ getters: true })) })
@@ -58,7 +58,7 @@ const createPlace = async (req, res, next) => {
   ));
   }
 
-  const { title, description, address, creator} = req.body;
+  const { title, description, address} = req.body;
   
   let coordinates
 
@@ -75,13 +75,13 @@ const createPlace = async (req, res, next) => {
     address,
     location: coordinates,
     image: req.file.path,
-    creator
+    creator: req.userData.userId
   });
 
   let user;
 
     try {
-      user = await User.findById(creator)
+      user = await User.findById(req.userData.userId);
      console.log('user', user)
     } catch (err) {
       const error = new HttpError('error creating place', 500);

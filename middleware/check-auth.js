@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
     if(!token) {
       throw new Error('authentication failed');
     }
-    const decodedToken = jwt.verify(token, 'supersecret_dont_share');
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY);
     console.log('decoded', decodedToken)
     req.userData = {userId: decodedToken.userId}
     console.log('req.userData in check auth mw', req.userData)
